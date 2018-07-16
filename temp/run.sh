@@ -1,1 +1,0 @@
-javac com/example/test/Hello.java && java com.example.test.Hello

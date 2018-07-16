@@ -1,1 +1,0 @@
-javac src/com/example/Client.java && java src.com.example.Client 127.0.0.1 5008

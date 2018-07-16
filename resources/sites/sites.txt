@@ -1,5 +1,0 @@
-# Java SE 8: Getting Started with Socket Programming
-
-1.http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/SocketProgramming/SocketProgram.html#overview
-
-#
