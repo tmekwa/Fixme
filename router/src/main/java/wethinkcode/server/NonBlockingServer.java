@@ -3,10 +3,13 @@ package wethinkcode.server;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -106,15 +109,15 @@ public class NonBlockingServer implements Runnable
                         clientType = "Market";
                         _marketList.add(socketModel);
                     }
-                    System.out.println("Server Accepted: " + socketChannel.getRemoteAddress() + " as " + clientType);
+                    System.out.println("Server Accepted: [" + socketChannel.getRemoteAddress() + " as " + clientType + "] on [" + socketChannel.getLocalAddress()+ "]");
                 }
                 if (key.isReadable())
                 {
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
                     String client_message = this.processRead(key).trim();
 
                     if (client_message != null && client_message.length() > 0)
                     {
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
                         socketChannel.register(key.selector(), SelectionKey.OP_WRITE);
 
                         if (client_message.equalsIgnoreCase("exit"))
@@ -197,25 +200,38 @@ public class NonBlockingServer implements Runnable
         }
     }
 
-    private String processRead(SelectionKey key)
+    private String processRead(SelectionKey key) throws Exception
     {
-        try
-        {
-            SocketChannel socketChannel = (SocketChannel) key.channel();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-
-            if (socketChannel.read(byteBuffer) > 0)
-            {
-                byteBuffer.flip();
-                return (new String(byteBuffer.array()));
-            }
-        }
-        catch (Exception exc)
-        {
-            System.out.println("processRead()->[Exception]: " + exc.getMessage());
-        }
-        return (null);
+        SocketChannel socketChannel = (SocketChannel)key.channel();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        socketChannel.read(byteBuffer);
+        byteBuffer.flip();
+        Charset charset = Charset.forName("UTF-8");
+        CharsetDecoder charsetDecoder = charset.newDecoder();
+        CharBuffer charBuffer = charsetDecoder.decode(byteBuffer);
+        String message = charBuffer.toString();
+        return (message);
     }
+
+    // private String processRead(SelectionKey key)
+    // {
+    //     try
+    //     {
+    //         SocketChannel socketChannel = (SocketChannel) key.channel();
+    //         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+
+    //         if (socketChannel.read(byteBuffer) > 0)
+    //         {
+    //             byteBuffer.flip();
+    //             return (new String(byteBuffer.array()));
+    //         }
+    //     }
+    //     catch (Exception exc)
+    //     {
+    //         System.out.println("processRead()->[Exception]: " + exc.getMessage());
+    //     }
+    //     return (null);
+    // }
 
     private boolean processWrite(SocketChannel socketChannel, String message)
     {
