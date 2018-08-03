@@ -1,0 +1,7 @@
+Broker's Formart:
+ClientID | MSSG_TYPE | CHECKSUM (Instrument(id), Quantity, Market(id), Price)
+012345 | B/S (BUY/SELL) | h4bvbg45gbrcdcw02 (MD5 encryped message: 012 1 012345 1500)
+
+Market's Formart:
+ClientID | EXECUTION_STATUS (executed/rejected) | CHECKSUM
+012345 | R/E (EXECUTED/REJECTED) | CHECKSUM
