@@ -1,12 +1,9 @@
 package wethinkcode;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -15,21 +12,18 @@ import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
 
+import wethinkcode.config.Config;
+
 
 public class NonBlockingMarket
 {
-    private BufferedReader userInputReader = null;
     private SocketChannel socketChannel;
     private Selector selector;
-    private int _portNumber;
-    private String _address = "127.0.0.1";
     private static String _message = null;
 
-    public NonBlockingMarket(String address, int port)
+    public NonBlockingMarket()
     {
         try {
-            this._address = address;
-            this._portNumber = port;
             this.init();
         } catch (Exception exc) {
             System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
@@ -38,34 +32,27 @@ public class NonBlockingMarket
 
     private void init() throws Exception
     {
-        InetAddress inetAddress = InetAddress.getByName(this._address);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, this._portNumber);
+        InetAddress inetAddress = InetAddress.getByName(Config.SERVER_ADDRESS);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, Config.SERVER_PORT);
         selector = Selector.open();
         socketChannel = SocketChannel.open();
 
         socketChannel.configureBlocking(false);
         socketChannel.connect(inetSocketAddress);
-        // int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE;
-        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_READ;
-        socketChannel.register(selector, operations);
-        this.userInputReader = new BufferedReader(new InputStreamReader(System.in));
+        socketChannel.register(selector, (SelectionKey.OP_CONNECT | SelectionKey.OP_READ));
 
         while (true)
         {
-            // if (selector.select() > 0)
             if (selector.selectNow() > 0)
             {
-                boolean isDone = processReadySet(selector.selectedKeys());
+                boolean isDone = processKeys(selector.selectedKeys());
                 if (isDone == true)
-                {
                     break ;
-                }
             }
-            // socketChannel.close();
         }
     }
 
-    private boolean processReadySet(Set<SelectionKey> readySet) throws Exception
+    private boolean processKeys(Set<SelectionKey> readySet) throws Exception
     {
         Iterator<SelectionKey> iterator = readySet.iterator();
 
@@ -79,9 +66,7 @@ public class NonBlockingMarket
                 boolean connected = processConnection(key);
 
                 if (connected == false)
-                {
                     return (true);
-                }
             }
             if (key.isReadable())
             {
@@ -98,9 +83,7 @@ public class NonBlockingMarket
             }
             if (key.isWritable())
             {
-                // System.out.println("Enter message (\"exit\" to quit)");
-                // String userInput = this.userInputReader.readLine();
-                String userInput = _message;//"Market is that and that...";
+                String userInput = _message;
 
                 if (userInput != null && userInput.length() > 0)
                 {

@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -15,55 +14,49 @@ import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
 
+import wethinkcode.config.Config;
 
 public class NonBlockingBroker
 {
     private BufferedReader userInputReader = null;
     private SocketChannel socketChannel;
     private Selector selector;
-    private int _portNumber;
-    private String _address = "127.0.0.1";
 
-    public NonBlockingBroker(String address, int port)
+    public NonBlockingBroker()
     {
         try {
-            this._address = address;
-            this._portNumber = port;
             this.init();
-        } catch (Exception exc) {
+        } 
+        catch (Exception exc)
+        {
             System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
         }
     }
 
     private void init() throws Exception
     {
-        InetAddress inetAddress = InetAddress.getByName(this._address);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, this._portNumber);
+        InetAddress inetAddress = InetAddress.getByName(Config.SERVER_ADDRESS);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, Config.SERVER_PORT);
         selector = Selector.open();
         socketChannel = SocketChannel.open();
 
         socketChannel.configureBlocking(false);
         socketChannel.connect(inetSocketAddress);
-        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE;
-        socketChannel.register(selector, operations);
+        socketChannel.register(selector, (SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE));
         this.userInputReader = new BufferedReader(new InputStreamReader(System.in));
 
         while (true)
         {
-            // if (selector.select() > 0)
             if (selector.selectNow() > 0)
             {
-                boolean isDone = processReadySet(selector.selectedKeys());
+                boolean isDone = processKeys(selector.selectedKeys());
                 if (isDone == true)
-                {
                     break ;
-                }
             }
-            // socketChannel.close();
         }
     }
 
-    private boolean processReadySet(Set<SelectionKey> readySet) throws Exception
+    private boolean processKeys(Set<SelectionKey> readySet) throws Exception
     {
         Iterator<SelectionKey> iterator = readySet.iterator();
 
@@ -77,9 +70,7 @@ public class NonBlockingBroker
                 boolean connected = processConnection(key);
 
                 if (connected == false)
-                {
                     return (true);
-                }
             }
             if (key.isReadable())
             {
