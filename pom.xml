@@ -21,5 +21,6 @@
     <module>router</module>
     <module>broker</module>
     <module>market</module>
+    <module>database</module>
   </modules>
 </project>
