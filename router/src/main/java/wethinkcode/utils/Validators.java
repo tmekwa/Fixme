@@ -1,11 +1,13 @@
 package wethinkcode.utils;
 
+import wethinkcode.hashing.*;
+
 public class Validators
 {
     private static boolean isValid;
     public static String clientID;
     public static String mssg_type;
-    public static String checksum;
+    public static String _checksum;
 
     public static boolean ValidateMessage(String message)
     {
@@ -18,7 +20,7 @@ public class Validators
             {
                 clientID = mssg_parts[0];
                 mssg_type = mssg_parts[1];
-                checksum = mssg_parts[2];
+                _checksum = mssg_parts[2];
 
                 if (validateID(clientID) == true && validateMessageType(mssg_type) == true)
                     isValid = true;
@@ -30,10 +32,14 @@ public class Validators
         return (isValid);
     }
 
-    public static boolean ValidateChecksum(String checksum)
+    public static void ValidateChecksum(String checksum)
     {
-
-        return (false);
+        EncryptANDdecrypt valiAnDdecrypt = new EncryptANDdecrypt();
+        checksum = valiAnDdecrypt.encrypt(checksum);
+        System.out.println("encrypt: " + checksum);
+        checksum = valiAnDdecrypt.decrypt(checksum);
+        System.out.println("decrypt: " + checksum);
+        //return (false);
     }
 
     public static boolean validateMessageType(String message)
