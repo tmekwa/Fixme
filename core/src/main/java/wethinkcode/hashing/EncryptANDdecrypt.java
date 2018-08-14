@@ -1,70 +1,64 @@
 package wethinkcode.hashing;
 
-import java.util.Base64;    
-import javax.crypto.Cipher;  
-import javax.crypto.KeyGenerator;   
-import javax.crypto.SecretKey;  
+import java.util.*;
 
 
-public class EncryptANDdecrypt
-{
-    private Cipher cipher;
-    private SecretKey secretKey;
-    private KeyGenerator keyGenerator;
+public class EncryptANDdecrypt {
+	private static Map<String, String> m = new HashMap<String, String>();
+	private static Map<String, String> mm = new HashMap<String, String>();
+	private static String[] keys = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+			"s", "t", "u", "v", "w", "x", "y", "z", " " , "|" , "1", "2" , "3" , "4" , "5", "6", "7", "8", "9", "0"};
+	private static String[] values = { "D%", "9", "I", "8", "N", "7", "E", "6", "S", "5", "H", "4", "R", "3", "K", "2", "A",
+			"1", "@", "$", "%", "&", "*", "!", "0", "X", "Q" , "/", "-", "+", "?", "~", "Z", "Y", "M", "J", "C", "W"};
 
-    public EncryptANDdecrypt()
-    {
-        try 
-        {
-            /* 
-                create key 
-                If we need to generate a new key use a KeyGenerator
-                If we have existing plaintext key use a SecretKeyFactory
-            */  
-            this.keyGenerator = KeyGenerator.getInstance("AES");
-            //this.keyGenerator.init(128);
-            this.secretKey = keyGenerator.generateKey();
-            /*
-            Cipher Info
-            Algorithm : for the encryption of electronic data
-            mode of operation : to avoid repeated blocks encrypt to the same values.
-            padding: ensuring messages are the proper length necessary for certain ciphers 
-            mode/padding are not used with stream cyphers.  
-            */
-            this.cipher = Cipher.getInstance("AES"); 
-        } catch (Exception e) { e.printStackTrace(); }
-           
+	public static String encrypt(String value) {
+		for (int i = 0; i < keys.length; i++) {
+			m.put(keys[i], values[i]);
+		}
+		String data = "";
+		char[] cc = value.toCharArray();
+		int len = cc.length;
+		int count = 0;
+		for (int i = 0; i < m.size(); i++) {
+			if (count < len) {
+				data = data + m.get("" + cc[i] + "");
+				count++;
+			}
+		}
+		return data;
     }
 
-    public String encrypt(String plainText)
-    {
-        
-        String returnString = null;
-
-        try {
-            byte[] plainTextByte = plainText.getBytes();
-            this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey);
-            byte[] encryptedByte = this.cipher.doFinal(plainTextByte);
-            Base64.Encoder encoder = Base64.getEncoder();
-            String encryptedText = encoder.encodeToString(encryptedByte);
-            returnString = encryptedText;
-        } catch (Exception e) { e.printStackTrace(); }
-        
-        return returnString;
+	public static String decrypt(String value) {
+		for (int i = 0; i < values.length; i++) {
+			mm.put(values[i], keys[i]);
+		}
+		String data = "";
+		char[] cc = value.toCharArray();
+		int len = cc.length;
+		int count = 0;
+		for (int i = 0; i < mm.size(); i++) {
+			if (count < len) {
+				data = data + mm.get("" + cc[i] + "");
+				count++;
+			}
+		}
+		return data;
     }
-
-    public String decrypt(String encryptedText)
-    {
-        String returString = null;
-        try {
-            Base64.Decoder decoder = Base64.getDecoder();
-            byte[] encryptedTextByte = decoder.decode(encryptedText);
-            this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey);
-            byte[] decryptedByte = this.cipher.doFinal(encryptedTextByte);
-            String decryptedText = new String(decryptedByte);
-            returString = decryptedText;
-        } catch (Exception e) { e.printStackTrace(); }
-        
-        return returString;
-    }
+    
+	/*	public static void main(String[] args) {
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		EncryptANDdecrypt crypto = new EncryptANDdecrypt();
+		
+		System.out.println("Enter the String to perform Encryption and Decryption : ");
+		String strToEncrypt = scanner.nextLine();
+		
+		String strToDecrypt = crypto.encrypt(strToEncrypt);
+		
+		System.out.println("The string \""+strToEncrypt+"\" Encrypted as : "+strToDecrypt);
+		
+		System.out.println("The string \""+strToDecrypt+"\" Decrypted as : "+crypto.decrypt(strToDecrypt));
+	}	
+		*/
 }

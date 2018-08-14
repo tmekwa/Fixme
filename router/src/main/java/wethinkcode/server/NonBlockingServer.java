@@ -1,21 +1,14 @@
 package wethinkcode.server;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.net.*;
+import java.nio.channels.*;
+import java.util.*;
 
 import wethinkcode.config.Config;
-import wethinkcode.models.MessageModel;
-import wethinkcode.models.SocketModel;
-import wethinkcode.utils.Convertors;
-import wethinkcode.utils.SocketTools;
+import wethinkcode.hashing.EncryptANDdecrypt;
+import wethinkcode.models.*;
+import wethinkcode.utils.*;
+import wethinkcode.messages.*;
 
 public class NonBlockingServer implements Runnable
 {
@@ -77,6 +70,7 @@ public class NonBlockingServer implements Runnable
 
     private void processKeys(Set<SelectionKey> readySet) // throws Exception
     {
+        String StoredID = new String();
         try
         {
             Iterator<SelectionKey> iterator = readySet.iterator();
@@ -113,7 +107,7 @@ public class NonBlockingServer implements Runnable
                 {
                     // String client_message = this.processRead(key).trim();
                     String client_message = SocketTools.ProcessRead(key);
-
+ 
                     if (client_message != null && client_message.length() > 0)
                     {
                         SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -129,15 +123,15 @@ public class NonBlockingServer implements Runnable
                         {
                             for (SocketModel sm: _marketList)
                             {
-                                String[] fixed_mssg = client_message.split("#");
-
+                                String[] fixed_mssg = client_message.split("\\|");
                                 if (fixed_mssg != null && fixed_mssg.length > 0 && fixed_mssg[0].equals(sm.getIdString()))
                                 {
                                     String brokerPort = Convertors.GetPort_String(socketChannel.getRemoteAddress().toString());
                                     String marketPort = Convertors.GetPort_String(sm.getSocketChannel().getRemoteAddress().toString());
-
+                                    
                                     _messageList.add(new MessageModel(brokerPort, marketPort));
-                                    System.out.println("[Broker="+ brokerPort +"] to [Market="+ marketPort +"]: " + client_message);
+                                    System.out.println("Routing message from ["+ brokerPort +"] to ["+ marketPort +"] : " + LogFixMessage.LogMessage(client_message));
+                                    client_message = generatechecksum.undoChecksum(client_message);
                                     // Todo: Check processRead() return
                                     // this.processWrite(sm.getSocketChannel(), client_message);
                                     SocketTools.ProcessWrite(sm.getSocketChannel(), client_message);
@@ -159,7 +153,7 @@ public class NonBlockingServer implements Runnable
                 if (key.isWritable())
                 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
-                    String response = "N/A";
+                    String response = "Market Does not exist in the routing table.. try a valid ID.";
 
                     if (this._port == Config.BROKER_PORT)
                     {
@@ -197,7 +191,8 @@ public class NonBlockingServer implements Runnable
         }
         catch (Exception exc)
         {
-            System.out.println("processKeys()->[Exception]: " + exc.getMessage());    
+            exc.printStackTrace();
+            //System.out.println("processKeys()->[Exception]: " + exc.getMessage());    
         }
     }
 }

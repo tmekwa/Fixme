@@ -11,7 +11,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        Validators.ValidateChecksum("Heythereprettyboy");  
+        //Validators.ValidateChecksum("Heythereprettyboy");  
         new Config();
 
         ExecutorService executorService = Executors.newCachedThreadPool();

@@ -1,16 +1,10 @@
 package wethinkcode;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.util.Iterator;
-import java.util.Set;
+import java.net.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.nio.charset.*;
+import java.util.*;
 
 import wethinkcode.config.Config;
 
@@ -19,7 +13,9 @@ public class NonBlockingMarket
 {
     private SocketChannel socketChannel;
     private Selector selector;
-    private static String _message = null;
+    private static String[] _response = {"EXECUTED","REJECTED"};
+    private static Random rand;
+    private static int randomized_response;
 
     public NonBlockingMarket()
     {
@@ -72,32 +68,43 @@ public class NonBlockingMarket
             {
                 String message = processRead(key);
                 String address = socketChannel.getLocalAddress().toString();
-                String[] fixedMessage = message.split("#");
+                String[] fixedMessage = message.split("\\|");
 
                 if (fixedMessage != null && fixedMessage.length > 0 && fixedMessage[0].equals(address.split(":")[1]))
                 {
                     System.out.println("[Server]: " + message);
-                    _message = "Something to say...";
+                    rand = new Random();
+                    randomized_response = rand.nextInt(2);
                     socketChannel.register(selector, SelectionKey.OP_WRITE);
                 }
             }
             if (key.isWritable())
             {
-                String userInput = _message;
+                String response = _response[randomized_response];
 
-                if (userInput != null && userInput.length() > 0)
+                switch (response)
+                {
+                    case "EXECUTED":
+                        System.out.println("Transaction Success!");
+                        break;
+                    case "REJECTED":
+                        System.out.println("Transaction Declined!");
+                        break;
+                }
+
+                if (response != null && response.length() > 0)
                 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
-                    ByteBuffer byteBuffer = ByteBuffer.wrap(userInput.getBytes());
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(response.getBytes());
                     socketChannel.write(byteBuffer);
                     socketChannel.register(selector, SelectionKey.OP_READ);
-                    _message = null;
+                    //_response = null;
                 }
-                if (userInput != null && userInput.equalsIgnoreCase("exit"))
+                /*if (userInput != null && userInput.equalsIgnoreCase("exit"))
                 {
                     socketChannel.close();
                     return (true);
-                }
+                }*/
             }
         }
         return (false);

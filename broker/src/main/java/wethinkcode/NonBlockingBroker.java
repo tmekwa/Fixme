@@ -13,7 +13,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
-
+import wethinkcode.hashing.*;
+import wethinkcode.utils.Validators;
+import wethinkcode.utils.generatechecksum;
 import wethinkcode.config.Config;
 
 public class NonBlockingBroker
@@ -29,7 +31,8 @@ public class NonBlockingBroker
         } 
         catch (Exception exc)
         {
-            System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
+            exc.printStackTrace();
+           // System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
         }
     }
 
@@ -80,15 +83,21 @@ public class NonBlockingBroker
             }
             if (key.isWritable())
             {
-                System.out.println("Enter message (\"exit\" to quit)");
+                System.out.print("Enter Fix message[MARKET[ID] | BUY or SELL |  INSTRUMENT | QUANTITY | PRICE]\n-> ");
                 String userInput = this.userInputReader.readLine();
-
+                
                 if (userInput != null && userInput.length() > 0)
                 {
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
-                    ByteBuffer byteBuffer = ByteBuffer.wrap(userInput.getBytes());
-                    socketChannel.write(byteBuffer);
-                    socketChannel.register(selector, SelectionKey.OP_READ);
+                    if (Validators.ValidateMessage(userInput) == true)
+                    {
+                        userInput =  generatechecksum.generateChecksum(userInput);
+                        SocketChannel socketChannel = (SocketChannel) key.channel();
+                        ByteBuffer byteBuffer = ByteBuffer.wrap(userInput.getBytes());
+                        socketChannel.write(byteBuffer);
+                        socketChannel.register(selector, SelectionKey.OP_READ);
+                    }
+                    else 
+                        System.out.println("\nMESSAGE BADLY FORMATTED.");
                 }
                 if (userInput != null && userInput.equalsIgnoreCase("exit"))
                 {
@@ -110,6 +119,8 @@ public class NonBlockingBroker
         }
         System.out.println("Client Running: "+ this.socketChannel.getLocalAddress());
         System.out.println("Client Connected to: " + serverSocketChannel.getRemoteAddress() + "\n");
+
+        System.out.println("ID [" + this.socketChannel.getLocalAddress().toString().split(":")[1] +"]\n");
         return (true);
     }
 

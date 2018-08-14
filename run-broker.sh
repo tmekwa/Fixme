@@ -1,1 +1,1 @@
-java -cp broker/target/broker-1.0-SNAPSHOT.jar wethinkcode.App
+clear && java -cp broker/target/broker-1.0-SNAPSHOT.jar wethinkcode.App
