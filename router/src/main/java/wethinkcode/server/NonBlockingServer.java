@@ -5,10 +5,12 @@ import java.nio.channels.*;
 import java.util.*;
 
 import wethinkcode.config.Config;
-import wethinkcode.hashing.EncryptANDdecrypt;
-import wethinkcode.models.*;
-import wethinkcode.utils.*;
-import wethinkcode.messages.*;
+import wethinkcode.models.MessageModel;
+import wethinkcode.models.SocketModel;
+import wethinkcode.utils.Convertors;
+import wethinkcode.utils.SocketTools;
+// import wethinkcode.actions.*;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
 
 public class NonBlockingServer implements Runnable
 {
@@ -74,7 +76,7 @@ public class NonBlockingServer implements Runnable
         try
         {
             Iterator<SelectionKey> iterator = readySet.iterator();
-
+            // Insert insertToDatabase = new Insert();
             while (iterator.hasNext())
             {
                 SelectionKey key = iterator.next();
@@ -101,7 +103,9 @@ public class NonBlockingServer implements Runnable
                         clientType = "Market";
                         _marketList.add(socketModel);
                     }
+                    // insertToDatabase.insert(clientType, clientType + "Name", )
                     System.out.println("Server Accepted: [" + socketChannel.getRemoteAddress() + " as " + clientType + "] on [" + socketChannel.getLocalAddress()+ "]");
+                    
                 }
                 if (key.isReadable())
                 {

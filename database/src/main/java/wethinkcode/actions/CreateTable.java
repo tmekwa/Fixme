@@ -12,30 +12,30 @@ public class CreateTable {
     public static void createMarketModelTable() {
         String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
 
-        String sql = "CREATE TABLE IF NOT EXISTS MarketModel (Id integer PRIMARY KEY, MarketName varchar(255) NOT NULL);";
+        String sql = "CREATE TABLE IF NOT EXISTS Market (Id integer PRIMARY KEY, MarketName varchar(255) NOT NULL);";
 
         try
         {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.ConsoleOutput("A new market table has been created.");
+            Console.consoleOutput("A new market table has been created.");
         } catch (SQLException e) {
-            Console.ConsoleOutput(e.getMessage());
+            Console.consoleOutput(e.getMessage());
         }
     }
 
     public static void createBrokerModelTable() {
         String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
 
-        String sql = "CREATE TABLE IF NOT EXISTS BrokerModel (Id integer PRIMARY KEY, BrokerName varchar(255) NOT NULL);";
+        String sql = "CREATE TABLE IF NOT EXISTS Broker (Id integer PRIMARY KEY, BrokerName varchar(255) NOT NULL);";
 
         try
         {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.ConsoleOutput("A new broker table has been created.");
+            Console.consoleOutput("A new broker table has been created.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -51,9 +51,27 @@ public class CreateTable {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.ConsoleOutput("A new table has been created.");
+            Console.consoleOutput("A new table has been created.");
         } catch (SQLException e) {
-            Console.ConsoleOutput(e.getMessage());
+            Console.consoleOutput(e.getMessage());
+        }
+    }
+
+    public static void createTransactionTable()
+    {
+        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+
+        String sql = "CREATE TABLE IF NOT EXISTS Transaction (Id integer PRIMARY KEY, BrokerId varchar(255) NOT NULL, MarketId varchar(255) NOT NULL, MessageType varchar(255) NOT NULL, Checksum varchar(255) NOT NULL, Status varchar(255) NOT NULL);";
+
+        try
+        {
+            Connection conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+            Console.consoleOutput("A new table Transactions has been created.");
+        } catch (SQLException e) {
+            Console.consoleOutput(e.getMessage());
+        
         }
     }
 }

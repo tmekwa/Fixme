@@ -1,11 +1,11 @@
 package wethinkcode.actions;
 
+import wethinkcode.utils.DatabaseHelper;
+import wethinkcode.utils.Console;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import wethinkcode.utils.DatabaseHelper;
-import wethinkcode.utils.Console;
 
 public class Delete {
 
@@ -29,7 +29,7 @@ public class Delete {
 
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            Console.ConsoleOutput("Deleted entry on id: " + id);
+            Console.consoleOutput("Deleted entry on id: " + id);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

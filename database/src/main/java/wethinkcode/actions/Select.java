@@ -17,7 +17,7 @@ public class Select {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            Console.ConsoleOutput(e.getMessage());
+            Console.consoleOutput(e.getMessage());
         }
         return conn;
     }
@@ -32,11 +32,11 @@ public class Select {
             ResultSet rs    = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Console.ConsoleOutput("=>" + rs.getInt("id") +  "\t" +
+                Console.consoleOutput("=>" + rs.getInt("id") +  "\t" +
                         rs.getString(columnName));
             }
         } catch (SQLException e) {
-            Console.ConsoleOutput (e.getMessage());
+            Console.consoleOutput (e.getMessage());
         }
     }
 
@@ -50,10 +50,10 @@ public class Select {
             ResultSet rs    = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Console.ConsoleOutput("=>" + rs.getInt("id"));
+                Console.consoleOutput("=>" + rs.getInt("id"));
             }
         } catch (SQLException e) {
-            Console.ConsoleOutput (e.getMessage());
+            Console.consoleOutput (e.getMessage());
         }
     }
 }

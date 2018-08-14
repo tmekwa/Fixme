@@ -16,7 +16,7 @@ public class Update {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            Console.ConsoleOutput(e.getMessage());
+            Console.consoleOutput(e.getMessage());
         }
         return conn;
     }
@@ -32,7 +32,7 @@ public class Update {
             pstmt.setString(1, name);
             pstmt.setInt(2, id);
             pstmt.executeUpdate();
-            Console.ConsoleOutput("Update successful on id: "  + id);
+            Console.consoleOutput("Update successful on id: "  + id);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

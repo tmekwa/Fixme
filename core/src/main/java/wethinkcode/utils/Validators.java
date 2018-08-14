@@ -1,6 +1,7 @@
 package wethinkcode.utils;
 
-import wethinkcode.hashing.*;
+import wethinkcode.hashing.EncryptANDdecrypt;
+// import wethinkcode.actions.Insert;
 
 public class Validators
 {
@@ -39,6 +40,8 @@ public class Validators
 
     public static void ValidateChecksum(String checksum)
     {/*
+    {
+        // Insert insertChecksum = new Insert();
         EncryptANDdecrypt valiAnDdecrypt = new EncryptANDdecrypt();
         checksum = valiAnDdecrypt.encrypt(checksum);
         System.out.println("encrypt: " + checksum);

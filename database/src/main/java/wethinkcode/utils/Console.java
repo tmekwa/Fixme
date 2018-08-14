@@ -2,12 +2,12 @@ package wethinkcode.utils;
 
 public class Console
 {
-    public static void IntegerOutput(int number)
+    public static void integerOutput(int number)
     {
         System.out.println(number);
     }
 
-    public static void ConsoleOutput(String message)
+    public static void consoleOutput(String message)
     {
         System.out.println(message);
     }
