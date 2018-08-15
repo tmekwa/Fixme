@@ -1,7 +1,5 @@
 package wethinkcode.config;
 
-import wethinkcode.actions.CreateDatabase;
-
 public class Config
 {
     public static String SERVER_ADDRESS;
@@ -15,12 +13,9 @@ public class Config
 
     private void init()
     {
-        CreateDatabase create = new CreateDatabase();
-        create.createNewDatabase();
+        //createDB.createNewDatabase();
         SERVER_ADDRESS = "127.0.0.1";
         BROKER_PORT = 5000;
         MARKET_PORT = 5001;
-
-
     }
 }

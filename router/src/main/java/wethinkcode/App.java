@@ -5,12 +5,19 @@ import java.util.concurrent.Executors;
 
 import wethinkcode.config.Config;
 import wethinkcode.server.NonBlockingServer;
-import wethinkcode.utils.Validators;
+import wethinkcode.utils.*;
+import wethinkcode.database.*;
 
 public class App 
 {
     public static void main( String[] args )
     {
+        CreateInstruments.createInstruments();
+        DeleteInstruments.removeInstrumentsFromDB();
+        // createDB.createNewDatabase();
+        // createTable.createInstrumentTable();
+        // //insert.insertIntoInstruments("BITCOIN", 40, 3);
+        // Select.selectAll("Instruments", "instrumentName");
         //Validators.ValidateChecksum("Heythereprettyboy");  
         new Config();
 

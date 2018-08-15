@@ -1,23 +1,17 @@
-package wethinkcode.actions;
+package wethinkcode.database;
 
-import wethinkcode.utils.DatabaseHelper;
-import wethinkcode.utils.Console;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-public class Insert {
+import java.sql.*;
+public class insert {
 
     private static Connection connect() {
         // SQLite connection string
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + "fix-me.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
-            Console.consoleOutput("Lol database");
+            System.out.println(e.getMessage());
+            System.out.println("Lol database");
         }
         return conn;
     }
@@ -31,10 +25,10 @@ public class Insert {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, name);
             pstmt.executeUpdate();
-            Console.consoleOutput("A new entry has been created.");
+            System.out.println("A new entry has been created.");
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
-            Console.consoleOutput("Lol insert into " + table);
+            System.out.println(e.getMessage());
+            System.out.println("Lol insert into " + table);
         }
     }
 
@@ -51,11 +45,30 @@ public class Insert {
             pstmt.setString(4, checksum);
             pstmt.setString(5, status);
             pstmt.executeUpdate();
-            Console.consoleOutput("A new entry has been created.");
+            System.out.println("A new entry has been created.");
 
         }catch(SQLException e){
-            Console.consoleOutput(e.getMessage());          
-            Console.consoleOutput("Lol insert into transactions");
+            System.out.println(e.getMessage());          
+            System.out.println("Lol insert into transactions");
+        }
+    }
+
+    public static void insertIntoInstruments(String instrumentName, int price, int quantity)
+    {
+        String sql = "INSERT INTO Instruments(InstrumentName, Price, Quantity) VALUES(?,?,?)";
+        
+        try{
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, instrumentName);
+            pstmt.setInt(2, price);
+            pstmt.setInt(3, quantity);
+            pstmt.executeUpdate();
+            System.out.println("A new entry has been created.");
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());          
+            System.out.println("Lol insert into transactions");
         }
     }
 }

@@ -5,7 +5,13 @@ public class InstrumentModel
     private int _id;
     private int _price;
     private int _quantity;
-    private int _instrumentType;
+    private String _instrumentName;
+
+    InstrumentModel(String instrumentname, int quantity, int price)
+    {
+        this._instrumentName = instrumentname;
+        
+    }
 
     public int get_id() {
         return _id;
@@ -27,11 +33,7 @@ public class InstrumentModel
         this._quantity = quantity;
     }
 
-    public int get_instrumentType() {
-        return _instrumentType;
-    }
-
-    public void set_instrumentType(int instrumentType) {
-        this._instrumentType = instrumentType;
+    public String get_instrumentName() {
+        return _instrumentName;
     }
 }

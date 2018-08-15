@@ -1,23 +1,18 @@
-package wethinkcode.actions;
+package wethinkcode.database;
 
-import wethinkcode.utils.Console;
-import wethinkcode.utils.DatabaseHelper;
+import wethinkcode.utils.*;
 
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Select {
 
     private static Connection connect() {
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + "fix-me.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
+            System.out.println(e.getMessage());
         }
         return conn;
     }
@@ -32,11 +27,11 @@ public class Select {
             ResultSet rs    = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Console.consoleOutput("=>" + rs.getInt("id") +  "\t" +
+                System.out.println("=>" + rs.getInt("id") +  "\t" +
                         rs.getString(columnName));
             }
         } catch (SQLException e) {
-            Console.consoleOutput (e.getMessage());
+            System.out.println (e.getMessage());
         }
     }
 
@@ -50,10 +45,10 @@ public class Select {
             ResultSet rs    = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Console.consoleOutput("=>" + rs.getInt("id"));
+                System.out.println("=>" + rs.getInt("id"));
             }
         } catch (SQLException e) {
-            Console.consoleOutput (e.getMessage());
+            System.out.println (e.getMessage());
         }
     }
 }

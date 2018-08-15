@@ -1,16 +1,12 @@
-package wethinkcode.actions;
+package wethinkcode.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import wethinkcode.utils.DatabaseHelper;
-import wethinkcode.utils.Console;
+import java.sql.*;
 
-public class CreateTable {
+public class createTable {
+    private static String DBFile = "fix-me.db";
 
     public static void createMarketModelTable() {
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + DBFile;
 
         String sql = "CREATE TABLE IF NOT EXISTS Market (Id integer PRIMARY KEY, MarketName varchar(255) NOT NULL);";
 
@@ -19,14 +15,14 @@ public class CreateTable {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.consoleOutput("A new market table has been created.");
+            System.out.println("A new market table has been created.");
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
     public static void createBrokerModelTable() {
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + DBFile;
 
         String sql = "CREATE TABLE IF NOT EXISTS Broker (Id integer PRIMARY KEY, BrokerName varchar(255) NOT NULL);";
 
@@ -35,14 +31,14 @@ public class CreateTable {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.consoleOutput("A new broker table has been created.");
+            System.out.println("A new broker table has been created.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static void createConnectingTable(String tblName) {
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + DBFile;
 
         String sql = "CREATE TABLE IF NOT EXISTS" + tblName + "(Id integer PRIMARY KEY, Name varchar(255) NOT NULL);";
 
@@ -51,15 +47,15 @@ public class CreateTable {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.consoleOutput("A new table has been created.");
+            System.out.println("A new table has been created.");
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
     public static void createTransactionTable()
     {
-        String url = "jdbc:sqlite:" + DatabaseHelper.DATABASEFILE_STRING;
+        String url = "jdbc:sqlite:SQLite/" + DBFile;
 
         String sql = "CREATE TABLE IF NOT EXISTS Transaction (Id integer PRIMARY KEY, BrokerId varchar(255) NOT NULL, MarketId varchar(255) NOT NULL, MessageType varchar(255) NOT NULL, Checksum varchar(255) NOT NULL, Status varchar(255) NOT NULL);";
 
@@ -68,9 +64,27 @@ public class CreateTable {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            Console.consoleOutput("A new table Transactions has been created.");
+            System.out.println("A new table Transactions has been created.");
         } catch (SQLException e) {
-            Console.consoleOutput(e.getMessage());
+            System.out.println(e.getMessage());
+        
+        }
+    }
+
+    public static void createInstrumentTable()
+    {
+        String url = "jdbc:sqlite:SQLite/" + DBFile;
+
+        String sql = "CREATE TABLE IF NOT EXISTS Instruments (Id integer PRIMARY KEY, InstrumentName varchar(255) NOT NULL, Price integer NOT NULL, Quantity integer NOT NULL);";
+
+        try
+        {
+            Connection conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+            System.out.println("A new Instrument table has been created.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         
         }
     }
