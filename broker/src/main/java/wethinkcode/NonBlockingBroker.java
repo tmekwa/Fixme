@@ -14,6 +14,7 @@ import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
 import wethinkcode.hashing.*;
+import wethinkcode.utils.SocketTools;
 import wethinkcode.utils.Validators;
 import wethinkcode.utils.generatechecksum;
 import wethinkcode.config.Config;
@@ -70,14 +71,14 @@ public class NonBlockingBroker
 
             if (key.isConnectable())
             {
-                boolean connected = processConnection(key);
+                boolean connected = SocketTools.ProcessConnection(key);
 
                 if (connected == false)
                     return (true);
             }
             if (key.isReadable())
             {
-                String message = processRead(key);
+                String message = SocketTools.ProcessRead(key);
                 System.out.println("[Server]: " + message);
                 socketChannel.register(selector, SelectionKey.OP_WRITE);
             }
@@ -107,33 +108,5 @@ public class NonBlockingBroker
             }
         }
         return (false);
-    }
-
-    private boolean processConnection(SelectionKey key) throws Exception
-    {
-        SocketChannel serverSocketChannel = (SocketChannel) key.channel();
-
-        while (serverSocketChannel.isConnectionPending())
-        {
-            serverSocketChannel.finishConnect();
-        }
-        System.out.println("Client Running: "+ this.socketChannel.getLocalAddress());
-        System.out.println("Client Connected to: " + serverSocketChannel.getRemoteAddress() + "\n");
-
-        System.out.println("ID [" + this.socketChannel.getLocalAddress().toString().split(":")[1] +"]\n");
-        return (true);
-    }
-
-    private String processRead(SelectionKey key) throws Exception
-    {
-        SocketChannel socketChannel = (SocketChannel)key.channel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        socketChannel.read(byteBuffer);
-        byteBuffer.flip();
-        Charset charset = Charset.forName("UTF-8");
-        CharsetDecoder charsetDecoder = charset.newDecoder();
-        CharBuffer charBuffer = charsetDecoder.decode(byteBuffer);
-        String message = charBuffer.toString();
-        return (message);
     }
 }

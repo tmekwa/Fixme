@@ -32,4 +32,18 @@ public class SocketTools
         catch (Exception e) {}
         return (false);
     }
+    public static boolean ProcessConnection(SelectionKey key) throws Exception
+    {
+        SocketChannel serverSocketChannel = (SocketChannel) key.channel();
+
+        while (serverSocketChannel.isConnectionPending())
+        {
+            serverSocketChannel.finishConnect();
+        }
+        System.out.println("Client Running: "+ serverSocketChannel.getLocalAddress());
+        System.out.println("Client Connected to: " + serverSocketChannel.getRemoteAddress() + "\n");
+
+        System.out.println("ID [" + serverSocketChannel.getLocalAddress().toString().split(":")[1] +"]\n");
+        return (true);
+    }
 }

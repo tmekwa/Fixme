@@ -7,6 +7,7 @@ import java.nio.charset.*;
 import java.util.*;
 
 import wethinkcode.config.Config;
+import wethinkcode.utils.SocketTools;
 
 
 public class NonBlockingMarket
@@ -59,14 +60,14 @@ public class NonBlockingMarket
 
             if (key.isConnectable())
             {
-                boolean connected = processConnection(key);
+                boolean connected = SocketTools.ProcessConnection(key);
 
                 if (connected == false)
                     return (true);
             }
             if (key.isReadable())
             {
-                String message = processRead(key);
+                String message = SocketTools.ProcessRead(key);
                 String address = socketChannel.getLocalAddress().toString();
                 String[] fixedMessage = message.split("\\|");
 
@@ -108,31 +109,5 @@ public class NonBlockingMarket
             }
         }
         return (false);
-    }
-
-    private boolean processConnection(SelectionKey key) throws Exception
-    {
-        SocketChannel serverSocketChannel = (SocketChannel) key.channel();
-
-        while (serverSocketChannel.isConnectionPending())
-        {
-            serverSocketChannel.finishConnect();
-        }
-        System.out.println("Client Running: "+ this.socketChannel.getLocalAddress());
-        System.out.println("Client Connected to: " + serverSocketChannel.getRemoteAddress() + "\n");
-        return (true);
-    }
-
-    private String processRead(SelectionKey key) throws Exception
-    {
-        SocketChannel socketChannel = (SocketChannel)key.channel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        socketChannel.read(byteBuffer);
-        byteBuffer.flip();
-        Charset charset = Charset.forName("UTF-8");
-        CharsetDecoder charsetDecoder = charset.newDecoder();
-        CharBuffer charBuffer = charsetDecoder.decode(byteBuffer);
-        String message = charBuffer.toString();
-        return (message);
     }
 }
