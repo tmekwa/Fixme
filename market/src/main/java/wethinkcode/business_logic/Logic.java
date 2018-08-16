@@ -1,8 +1,8 @@
 package wethinkcode.business_logic;
 
 import java.util.*;
-import wethinkcode.utils.*;
 import wethinkcode.model.*;
+import wethinkcode.utils.DisplayMarketData;
 
 public class Logic
 {
@@ -23,8 +23,9 @@ public class Logic
         this._price = price;
     }
 
-    public String doLogic()
+    public String doLogic() //please can someone teach me how to name shit -_-, i mean look at this class' name.. soo stupid
     {
+        DisplayMarketData.Print(this._instrumentList);
         String resp = null;
         if (this._mssg_type.equalsIgnoreCase("BUY"))
             resp = this.Buy();
@@ -39,7 +40,7 @@ public class Logic
         for (InstrumentModel im : this._instrumentList)
         {
             int final_price = im.get_price() * this._quantity;
-            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price);
+            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price)
             {
                 im.set_quantity(im.get_quantity() - this._quantity);
                 transactionSuccess = true;
@@ -58,7 +59,7 @@ public class Logic
         for (InstrumentModel im : this._instrumentList)
         {
             int final_price = im.get_price() * this._quantity;
-            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price);
+            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price)
             {
                 im.set_quantity(im.get_quantity() + this._quantity);
                 transactionSuccess = true;

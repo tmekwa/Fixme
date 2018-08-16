@@ -43,7 +43,7 @@ public class NonBlockingServer implements Runnable
     {
         try
         {
-            InetAddress hostIpAddress = InetAddress.getByName(Config.SERVER_ADDRESS);
+            //InetAddress hostIpAddress = InetAddress.getByName(Config.SERVER_ADDRESS);
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 
@@ -71,11 +71,9 @@ public class NonBlockingServer implements Runnable
 
     private void processKeys(Set<SelectionKey> readySet) // throws Exception
     {
-        String StoredID = new String();
         try
         {
             Iterator<SelectionKey> iterator = readySet.iterator();
-            // Insert insertToDatabase = new Insert();
             while (iterator.hasNext())
             {
                 SelectionKey key = iterator.next();
@@ -102,7 +100,6 @@ public class NonBlockingServer implements Runnable
                         clientType = "Market";
                         _marketList.add(socketModel);
                     }
-                    // insertToDatabase.insert(clientType, clientType + "Name", )
                     System.out.println("Server Accepted: [" + socketChannel.getRemoteAddress() + " as " + clientType + "] on [" + socketChannel.getLocalAddress()+ "]");
                     
                 }

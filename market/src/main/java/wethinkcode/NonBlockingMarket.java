@@ -58,14 +58,12 @@ public class NonBlockingMarket
 
         while (iterator.hasNext())
         {
-            DisplayMarketData.Print(_instrumentList);
             SelectionKey key = iterator.next();
             iterator.remove();
 
             if (key.isConnectable())
             {
                 boolean connected = SocketTools.ProcessConnection(key);
-
                 if (connected == false)
                     return (true);
             }
