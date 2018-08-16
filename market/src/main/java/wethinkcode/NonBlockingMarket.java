@@ -24,9 +24,9 @@ public class NonBlockingMarket
     {
         try {
             this.init();
-        } catch (Exception exc) {
-            exc.printStackTrace();
-            //System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
+        } catch (Exception exc)
+        {
+            System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
         }
     }
 
