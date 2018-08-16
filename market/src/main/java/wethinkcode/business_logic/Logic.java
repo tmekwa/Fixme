@@ -64,7 +64,7 @@ public class Logic
         for (InstrumentModel im : this._instrumentList)
         {
             int final_price = im.get_price() * this._quantity;
-            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price)
+            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price >= this._price)
             {
                 im.set_quantity(im.get_quantity() + this._quantity);
                 transactionSuccess = true;
