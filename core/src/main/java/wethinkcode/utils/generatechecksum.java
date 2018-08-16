@@ -1,6 +1,6 @@
 package wethinkcode.utils;
 
-import wethinkcode.hashing.EncryptANDdecrypt;
+import wethinkcode.hashing.*;
 
 public class generatechecksum
 {
@@ -16,11 +16,11 @@ public class generatechecksum
         String quant = mssg_parts[3];
         String price = mssg_parts[4];
 
-        String checksum = marketId + separator + messType + separator + EncryptANDdecrypt.encrypt(instru + separator + quant + separator + price);
+        String checksum = marketId + separator + messType + separator + Encrypt.encrypt(instru + separator + quant + separator + price);
         return (checksum);    
     }
 
-    public static String undoChecksum(String checksum) 
+    /*public static String undoChecksum(String checksum) 
     {
         String[] mssg_parts = checksum.split("\\|");
 
@@ -30,7 +30,7 @@ public class generatechecksum
 
         String decryptedString = marketID + separator + messType + separator + EncryptANDdecrypt.decrypt(checkshum);
         return (decryptedString);
-    }
+    }*/
 
     /*public static void main(String[] args) 
     {

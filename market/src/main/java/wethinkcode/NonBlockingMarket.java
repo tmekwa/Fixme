@@ -25,7 +25,8 @@ public class NonBlockingMarket
         try {
             this.init();
         } catch (Exception exc) {
-            System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
+            exc.printStackTrace();
+            //System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
         }
     }
 
@@ -75,15 +76,16 @@ public class NonBlockingMarket
 
                 if (fixedMessage != null && fixedMessage.length > 0 && fixedMessage[0].equals(address.split(":")[1]))
                 {
-                    System.out.println("[Server]: " + message);
+                    System.out.println("[Broker]: " + message);
                     logic = new Logic(fixedMessage[1], fixedMessage[2], Integer.parseInt(fixedMessage[3]), Integer.parseInt(fixedMessage[4]), _instrumentList);
-                    _response = logic.doLogic();
+                    _response = logic.doLogic(message);
                     socketChannel.register(selector, SelectionKey.OP_WRITE);
                 }
             }
             if (key.isWritable())
             {
                 String response = _response;
+
                 if (response != null && response.length() > 0)
                 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();

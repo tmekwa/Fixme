@@ -79,7 +79,7 @@ public class NonBlockingBroker
             if (key.isReadable())
             {
                 String message = SocketTools.ProcessRead(key);
-                System.out.println("[Server]: " + message);
+                System.out.println("[Market]: " + message);
                 socketChannel.register(selector, SelectionKey.OP_WRITE);
             }
             if (key.isWritable())
@@ -91,7 +91,7 @@ public class NonBlockingBroker
                 {
                     if (Validators.ValidateMessage(userInput) == true)
                     {
-                        userInput =  generatechecksum.generateChecksum(userInput);
+                        //userInput =  generatechecksum.generateChecksum(userInput);
                         SocketChannel socketChannel = (SocketChannel) key.channel();
                         ByteBuffer byteBuffer = ByteBuffer.wrap(userInput.getBytes());
                         socketChannel.write(byteBuffer);

@@ -1,8 +1,10 @@
 package wethinkcode.business_logic;
 
 import java.util.*;
+
 import wethinkcode.model.*;
 import wethinkcode.utils.DisplayMarketData;
+import wethinkcode.utils.generatechecksum;
 
 public class Logic
 {
@@ -13,7 +15,6 @@ public class Logic
     private int _price;
     private List<InstrumentModel> _instrumentList;
 
-
     public Logic(String mssg_type,String instrumentName, int quantity, int price, List<InstrumentModel> instrumentList)
     {
         this._instrumentList = instrumentList;
@@ -23,14 +24,18 @@ public class Logic
         this._price = price;
     }
 
-    public String doLogic() //please can someone teach me how to name shit -_-, i mean look at this class' name.. soo stupid
+    public String doLogic(String og_message) //please can someone teach me how to name shit -_-, i mean look at this class' name.. soo stupid
     {
+        og_message = generatechecksum.generateChecksum(og_message);
+        String[] arr = og_message.split("\\|");
+
         DisplayMarketData.Print(this._instrumentList);
         String resp = null;
         if (this._mssg_type.equalsIgnoreCase("BUY"))
             resp = this.Buy();
         else if ((this._mssg_type.equalsIgnoreCase("SELL")))
             resp = this.Sell();
+        resp = arr[0] + " | " + resp + " | " + arr[2];
         return resp;
     }
 

@@ -130,8 +130,9 @@ public class NonBlockingServer implements Runnable
                                     String marketPort = Convertors.GetPort_String(sm.getSocketChannel().getRemoteAddress().toString());
                                     
                                     _messageList.add(new MessageModel(brokerPort, marketPort));
-                                    System.out.println("Routing message from ["+ brokerPort +"] to ["+ marketPort +"] : " + LogFixMessage.LogMessage(client_message));
-                                    client_message = generatechecksum.undoChecksum(client_message);
+                                    String message = generatechecksum.generateChecksum(client_message);
+                                    System.out.println("Routing message from ["+ brokerPort +"] to ["+ marketPort +"] : " + LogFixMessage.LogMessage(message));
+                                    //client_message = generatechecksum.generateChecksum(client_message);
                                     // Todo: Check processRead() return
                                     // this.processWrite(sm.getSocketChannel(), client_message);
                                     SocketTools.ProcessWrite(sm.getSocketChannel(), client_message);
