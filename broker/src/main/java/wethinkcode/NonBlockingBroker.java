@@ -33,7 +33,7 @@ public class NonBlockingBroker
         catch (Exception exc)
         {
             exc.printStackTrace();
-           // System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
+            System.out.println(this.getClass().getSimpleName() + " [Exception]: " + exc.getMessage());
         }
     }
 

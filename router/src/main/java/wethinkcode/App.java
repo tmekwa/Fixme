@@ -11,14 +11,7 @@ import wethinkcode.database.*;
 public class App 
 {
     public static void main( String[] args )
-    {
-        CreateInstruments.createInstruments();
-        DeleteInstruments.removeInstrumentsFromDB();
-        // createDB.createNewDatabase();
-        // createTable.createInstrumentTable();
-        // //insert.insertIntoInstruments("BITCOIN", 40, 3);
-        // Select.selectAll("Instruments", "instrumentName");
-        //Validators.ValidateChecksum("Heythereprettyboy");  
+    {  
         new Config();
 
         ExecutorService executorService = Executors.newCachedThreadPool();

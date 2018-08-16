@@ -1,4 +1,4 @@
-package wethinkcode.messages;
+package wethinkcode.displays;
 
 import wethinkcode.utils.*;
 

@@ -7,16 +7,18 @@ import java.nio.charset.*;
 import java.util.*;
 
 import wethinkcode.config.Config;
-import wethinkcode.utils.SocketTools;
-
+import wethinkcode.utils.*;
+import wethinkcode.business_logic.*;
+import wethinkcode.model.*;
 
 public class NonBlockingMarket
 {
     private SocketChannel socketChannel;
     private Selector selector;
-    private static String[] _response = {"EXECUTED","REJECTED"};
-    private static Random rand;
-    private static int randomized_response;
+    private static String _response;
+    private Logic logic;
+    private static List<InstrumentModel> _instrumentList;
+
 
     public NonBlockingMarket()
     {
@@ -29,6 +31,7 @@ public class NonBlockingMarket
 
     private void init() throws Exception
     {
+        _instrumentList =  CreateInstruments.createInstrumentList();
         InetAddress inetAddress = InetAddress.getByName(Config.SERVER_ADDRESS);
         InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, Config.SERVER_PORT);
         selector = Selector.open();
@@ -55,6 +58,7 @@ public class NonBlockingMarket
 
         while (iterator.hasNext())
         {
+            DisplayMarketData.Print(_instrumentList);
             SelectionKey key = iterator.next();
             iterator.remove();
 
@@ -74,25 +78,14 @@ public class NonBlockingMarket
                 if (fixedMessage != null && fixedMessage.length > 0 && fixedMessage[0].equals(address.split(":")[1]))
                 {
                     System.out.println("[Server]: " + message);
-                    rand = new Random();
-                    randomized_response = rand.nextInt(2);
+                    logic = new Logic(fixedMessage[1], fixedMessage[2], Integer.parseInt(fixedMessage[3]), Integer.parseInt(fixedMessage[4]), _instrumentList);
+                    _response = logic.doLogic();
                     socketChannel.register(selector, SelectionKey.OP_WRITE);
                 }
             }
             if (key.isWritable())
             {
-                String response = _response[randomized_response];
-
-                switch (response)
-                {
-                    case "EXECUTED":
-                        System.out.println("Transaction Success!");
-                        break;
-                    case "REJECTED":
-                        System.out.println("Transaction Declined!");
-                        break;
-                }
-
+                String response = _response;
                 if (response != null && response.length() > 0)
                 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();

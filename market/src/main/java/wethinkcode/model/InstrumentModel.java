@@ -2,15 +2,17 @@ package wethinkcode.model;
 
 public class InstrumentModel
 {
-    private int _id;
+    private static int _id = 0;
     private int _price;
     private int _quantity;
     private String _instrumentName;
 
-    InstrumentModel(String instrumentname, int quantity, int price)
+    public InstrumentModel(String instrumentname, int quantity, int price)
     {
         this._instrumentName = instrumentname;
-        
+        this._quantity  = quantity;
+        this._price = price;
+        _id++;
     }
 
     public int get_id() {
@@ -33,7 +35,7 @@ public class InstrumentModel
         this._quantity = quantity;
     }
 
-    public String get_instrumentName() {
+    public String get_Name() {
         return _instrumentName;
     }
 }
