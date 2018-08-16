@@ -7,7 +7,7 @@ import java.sql.*;
 public class Select {
 
     private static Connection connect() {
-        String url = "jdbc:sqlite:SQLite/" + "fix-me.db";
+        String url = "jdbc:sqlite:SQLite/" + Database_Helper.DBFile;
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);

@@ -5,6 +5,7 @@ import java.nio.channels.*;
 import java.util.*;
 
 import wethinkcode.config.Config;
+import wethinkcode.database.insert;
 import wethinkcode.models.*;
 import wethinkcode.utils.*;
 // import wethinkcode.actions.*;  
@@ -17,6 +18,7 @@ public class NonBlockingServer implements Runnable
     private static List<MessageModel> _messageList;
     private static List<SocketModel> _brokerList;
     private static List<SocketModel> _marketList;
+    private static String store_mess_type;
 
     public NonBlockingServer(int port)
     {
@@ -126,6 +128,7 @@ public class NonBlockingServer implements Runnable
                                 String[] fixed_mssg = client_message.split("\\|");
                                 if (fixed_mssg != null && fixed_mssg.length > 0 && fixed_mssg[0].equals(sm.getIdString()))
                                 {
+                                    store_mess_type = fixed_mssg[1];
                                     String brokerPort = Convertors.GetPort_String(socketChannel.getRemoteAddress().toString());
                                     String marketPort = Convertors.GetPort_String(sm.getSocketChannel().getRemoteAddress().toString());
                                     
@@ -155,6 +158,7 @@ public class NonBlockingServer implements Runnable
                 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     String response = "Market Does not exist in the routing table.. try a valid ID.";
+                    boolean check = false;
 
                     if (this._port == Config.BROKER_PORT)
                     {
@@ -166,6 +170,7 @@ public class NonBlockingServer implements Runnable
                             {
                                 messagesToRemove.add(mm);
                                 response = mm.getMessage();
+                                check = true;
                             }
                             else
                             {
@@ -179,6 +184,12 @@ public class NonBlockingServer implements Runnable
                         }
                     }
                     if (this._port == Config.MARKET_PORT) {}
+                    
+                    if (check)
+                    {
+                        String[] data = response.split("\\|");
+                        insert.insertInTransactions(socketChannel.getRemoteAddress().toString().split(":")[1], data[0].trim(), store_mess_type, data[2].trim(), data[1].trim());
+                    }
 
                     if (response != null)
                     {
@@ -192,6 +203,7 @@ public class NonBlockingServer implements Runnable
         }
         catch (Exception exc)
         {
+           // System.out.println(this._port + " >> In here: " + socketChannel.getRemoteAddress().toString() + " - " + response +  " = " + store_mess_type);
             exc.printStackTrace();
             //System.out.println("processKeys()->[Exception]: " + exc.getMessage());    
         }

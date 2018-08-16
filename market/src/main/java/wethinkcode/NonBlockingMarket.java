@@ -65,6 +65,7 @@ public class NonBlockingMarket
             if (key.isConnectable())
             {
                 boolean connected = SocketTools.ProcessConnection(key);
+                DisplayMarketData.Print(_instrumentList);
                 if (connected == false)
                     return (true);
             }

@@ -6,3 +6,6 @@ target/
 bin
 .project
 .classpath
+SQLite/
+.iml
+.class

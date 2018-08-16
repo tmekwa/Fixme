@@ -28,13 +28,13 @@ public class Logic
     {
         og_message = generatechecksum.generateChecksum(og_message);
         String[] arr = og_message.split("\\|");
-
-        DisplayMarketData.Print(this._instrumentList);
         String resp = null;
+
         if (this._mssg_type.equalsIgnoreCase("BUY"))
             resp = this.Buy();
         else if ((this._mssg_type.equalsIgnoreCase("SELL")))
             resp = this.Sell();
+        DisplayMarketData.Print(this._instrumentList);
         resp = arr[0] + " | " + resp + " | " + arr[2];
         return resp;
     }
@@ -64,7 +64,7 @@ public class Logic
         for (InstrumentModel im : this._instrumentList)
         {
             int final_price = im.get_price() * this._quantity;
-            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price == this._price)
+            if (im.get_Name().equalsIgnoreCase(this._instrumentName) && final_price >= this._price)
             {
                 im.set_quantity(im.get_quantity() + this._quantity);
                 transactionSuccess = true;

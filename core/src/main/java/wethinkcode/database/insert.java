@@ -1,11 +1,13 @@
 package wethinkcode.database;
 
 import java.sql.*;
+
+import wethinkcode.utils.Database_Helper;
 public class insert {
 
     private static Connection connect() {
         // SQLite connection string
-        String url = "jdbc:sqlite:SQLite/" + "fix-me.db";
+        String url = "jdbc:sqlite:SQLite/" + Database_Helper.DBFile;
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -34,7 +36,7 @@ public class insert {
 
     public static void insertInTransactions(String broker, String market, String message, String checksum, String status)
     {
-        String sql = "INSERT INTO Transaction (BrokerId, MarketId, MessageType, Checksum, Status) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO _Transaction (BrokerId, MarketId, MessageType, Checksum, Status) VALUES(?,?,?,?,?)";
         
         try{
             Connection conn = connect();

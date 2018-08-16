@@ -2,11 +2,13 @@ package wethinkcode.database;
 
 import java.sql.*;
 
+import wethinkcode.utils.Database_Helper;
+
 public class createDB
 {
     public static void createNewDatabase() {
  
-        String url = "jdbc:sqlite:SQLite/" + "fix-me.db";
+        String url = "jdbc:sqlite:SQLite/" + Database_Helper.DBFile;
  
         try
         {
